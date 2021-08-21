@@ -717,6 +717,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@open-tech-world/es-cli-args@workspace:."
   dependencies:
+    "@open-tech-world/rollup-plugin-clean": ^0.13.0
     "@rollup/plugin-typescript": ^8.2.5
     "@types/jest": ^27.0.1
     "@typescript-eslint/eslint-plugin": ^4.29.2
@@ -732,6 +733,56 @@ __metadata:
     typescript: ^4.3.5
   languageName: unknown
   linkType: soft
+
+"@open-tech-world/es-cli-styles@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@open-tech-world/es-cli-styles@npm:0.3.0"
+  checksum: 7695bb397c77809ecd9fa4d5d4f1f9c658c461f6ac4514ce9e4e2d4cf0755feee6db58a6c79dde720e96fbd85126530bd2e6ba86bc5b65a4a5f442276c2f9ac2
+  languageName: node
+  linkType: hard
+
+"@open-tech-world/es-glob@npm:^0.8.1":
+  version: 0.8.1
+  resolution: "@open-tech-world/es-glob@npm:0.8.1"
+  checksum: 7d98eadb8914e1270f438e9669a87e30e8ecb67d2bf8341131472b01bbe9e13b0c6be1896e5f043bfa61a33e14fedbf2cd4b9b2aff546b19a195e0feba0e0628
+  languageName: node
+  linkType: hard
+
+"@open-tech-world/es-utils@npm:^0.8.0":
+  version: 0.8.0
+  resolution: "@open-tech-world/es-utils@npm:0.8.0"
+  checksum: 3954f9653ff1777ae8e5170be6512113c957f988fb41182164f1ed59097cdc3f919fa4546eb2fa8d0ce89e27baa0abd8d0301190b27c99f9f70fa1a5db862e34
+  languageName: node
+  linkType: hard
+
+"@open-tech-world/node-glob@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@open-tech-world/node-glob@npm:0.4.0"
+  dependencies:
+    "@open-tech-world/es-glob": ^0.8.1
+    "@open-tech-world/es-utils": ^0.8.0
+  checksum: 62072d8cbc7ef29d3146aa1ad7cf43c9ba45e84277dd3870b874465f962c9d21d829ce85bd0e12ce9a77ff8dbad00d951e5291e73794bd3f688ff7c4b66c3ae7
+  languageName: node
+  linkType: hard
+
+"@open-tech-world/node-rm@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "@open-tech-world/node-rm@npm:0.5.0"
+  dependencies:
+    "@open-tech-world/es-cli-styles": ^0.3.0
+    "@open-tech-world/node-glob": ^0.4.0
+  checksum: eb71c16af1a2161d6a112831942721b8933e55d27fe2d36a8bc221189099abfa3480c7b9a579b87b1e141a60475225e8102fb39dafab28fa152537e2bd816099
+  languageName: node
+  linkType: hard
+
+"@open-tech-world/rollup-plugin-clean@npm:^0.13.0":
+  version: 0.13.0
+  resolution: "@open-tech-world/rollup-plugin-clean@npm:0.13.0"
+  dependencies:
+    "@open-tech-world/node-rm": ^0.5.0
+  checksum: 813a4bf2d127ac04fe8f8f69707a94cf2faf679651d5f986d2779d6ba14513ba8c2d0253d18c05b577dce151392d24342146492eba92a9c7d13806036a820efa
+  languageName: node
+  linkType: hard
 
 "@rollup/plugin-typescript@npm:^8.2.5":
   version: 8.2.5
