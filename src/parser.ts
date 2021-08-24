@@ -1,4 +1,4 @@
-import { isNumber } from '@open-tech-world/es-utils';
+import { camelCase, isNumber } from '@open-tech-world/es-utils';
 
 type ObjType = Record<string, unknown>;
 
@@ -43,6 +43,19 @@ function parseShortOptVal(str: string) {
   return obj;
 }
 
+function parseLongOpt(str: string) {
+  const obj: ObjType = {};
+  const result = new RegExp(/^-{2}([a-zA-Z0-9-]{2,})(?:=(.*))?$/).exec(str);
+
+  if (result) {
+    const opt = camelCase(result[1]);
+    const value = result[2];
+    obj[opt] = value ? getValue(value) : true;
+  }
+
+  return obj;
+}
+
 function isShortOpts(str: string): boolean {
   return RegExp(/^(?:-{1})(?:[a-zA-Z]+)$/).test(str);
 }
@@ -62,6 +75,7 @@ function splitStr(args: string): string[] {
       const regExpResult = new RegExp(/["']([^"']*)["']/).exec(
         args.substring(i)
       );
+
       if (regExpResult) {
         str += regExpResult[0];
         i = i + regExpResult[0].length;
@@ -79,29 +93,45 @@ function splitStr(args: string): string[] {
   }
 
   out.push(str);
-  console.log(out);
 
   return out;
 }
 
-function parser(args: string | string[]): ObjType {
+function isLongOpt(str: string): boolean {
+  return RegExp(/^-{2}[a-zA-Z0-9-]{2,}(?:=.*)?$/).test(str);
+}
+
+interface IOutObj {
+  args: string[];
+  opts: ObjType;
+}
+
+function parser(args: string | string[]): IOutObj {
   const curArgs = typeof args === 'string' ? splitStr(args.trim()) : args;
-  const outObj: ObjType = { args: [], opts: {} };
+  const outObj: IOutObj = { args: [], opts: {} };
 
   for (let i = 0; i < curArgs.length; i++) {
     const str = curArgs[i];
 
     if (isShortOpts(str)) {
-      const shortOpts = parseShortOpts(str);
-      outObj.opts = { ...(outObj.opts as ObjType), ...shortOpts };
+      const opts = parseShortOpts(str);
+      outObj.opts = { ...(outObj.opts as ObjType), ...opts };
       continue;
     }
 
     if (isShortOptVal(str)) {
-      const shortOpts = parseShortOptVal(str);
-      outObj.opts = { ...(outObj.opts as ObjType), ...shortOpts };
+      const opts = parseShortOptVal(str);
+      outObj.opts = { ...(outObj.opts as ObjType), ...opts };
       continue;
     }
+
+    if (isLongOpt(str)) {
+      const opts = parseLongOpt(str);
+      outObj.opts = { ...(outObj.opts as ObjType), ...opts };
+      continue;
+    }
+
+    outObj.args.push(str);
   }
 
   return outObj;
