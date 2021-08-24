@@ -1,5 +1,3 @@
-function esCliArgs(): string {
-  return 'Hello World!';
-}
+import parser from './parser';
 
-export default esCliArgs;
+export { parser };
