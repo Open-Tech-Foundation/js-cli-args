@@ -17,7 +17,7 @@ function getValue(str: string): unknown {
   return str;
 }
 
-function parseShortOpts(str: string) {
+function parseShortOpts(str: string): ObjType {
   const obj: ObjType = {};
   const result = new RegExp(/^(?:-{1})([a-zA-Z]+)$/).exec(str);
 
@@ -32,7 +32,7 @@ function parseShortOpts(str: string) {
   return obj;
 }
 
-function parseShortOptVal(str: string) {
+function parseShortOptVal(str: string): ObjType {
   const obj: ObjType = {};
   const result = new RegExp(/^(?:-{1})([a-zA-Z]+)=(.*)$/).exec(str);
 
@@ -43,7 +43,7 @@ function parseShortOptVal(str: string) {
   return obj;
 }
 
-function parseLongOpt(str: string) {
+function parseLongOpt(str: string): ObjType {
   const obj: ObjType = {};
   const result = new RegExp(/^-{2}([a-zA-Z0-9-]{2,})(?:=(.*))?$/).exec(str);
 
@@ -51,6 +51,17 @@ function parseLongOpt(str: string) {
     const opt = camelCase(result[1]);
     const value = result[2];
     obj[opt] = value ? getValue(value) : true;
+  }
+
+  return obj;
+}
+
+function parseNegationOpt(str: string): ObjType {
+  const obj: ObjType = {};
+  const result = new RegExp(/^-{2}no-([a-zA-Z]+)$/).exec(str);
+
+  if (result) {
+    obj[result[1]] = false;
   }
 
   return obj;
@@ -101,8 +112,12 @@ function isLongOpt(str: string): boolean {
   return RegExp(/^-{2}[a-zA-Z0-9-]{2,}(?:=.*)?$/).test(str);
 }
 
+function isNegationOpt(str: string): boolean {
+  return RegExp(/^-{2}no-(?:[a-zA-Z]+)$/).test(str);
+}
+
 interface IOutObj {
-  args: string[];
+  args: unknown[];
   opts: ObjType;
 }
 
@@ -125,13 +140,19 @@ function parser(args: string | string[]): IOutObj {
       continue;
     }
 
+    if (isNegationOpt(str)) {
+      const opts = parseNegationOpt(str);
+      outObj.opts = { ...(outObj.opts as ObjType), ...opts };
+      continue;
+    }
+
     if (isLongOpt(str)) {
       const opts = parseLongOpt(str);
       outObj.opts = { ...(outObj.opts as ObjType), ...opts };
       continue;
     }
 
-    outObj.args.push(str);
+    outObj.args.push(getValue(str));
   }
 
   return outObj;
