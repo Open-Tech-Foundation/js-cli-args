@@ -121,6 +121,34 @@ interface IOutObj {
   opts: ObjType;
 }
 
+function setOptsValue(optsObj: ObjType, newOptions: ObjType): void {
+  for (const [key, value] of Object.entries(newOptions)) {
+    if (key in optsObj) {
+      if (typeof value === 'boolean') {
+        optsObj[key] = value;
+      }
+
+      if (typeof value === 'number') {
+        if (Array.isArray(optsObj[key])) {
+          (optsObj[key] as number[]).push(value);
+        } else {
+          optsObj[key] = [optsObj[key], value];
+        }
+      }
+
+      if (typeof value === 'string') {
+        if (Array.isArray(optsObj[key])) {
+          (optsObj[key] as string[]).push(value);
+        } else {
+          optsObj[key] = [optsObj[key], value];
+        }
+      }
+    } else {
+      optsObj[key] = value;
+    }
+  }
+}
+
 function parser(args: string | string[]): IOutObj {
   const curArgs = typeof args === 'string' ? splitStr(args.trim()) : args;
   const outObj: IOutObj = { args: [], opts: {} };
@@ -130,25 +158,25 @@ function parser(args: string | string[]): IOutObj {
 
     if (isShortOpts(str)) {
       const opts = parseShortOpts(str);
-      outObj.opts = { ...(outObj.opts as ObjType), ...opts };
+      setOptsValue(outObj.opts, opts);
       continue;
     }
 
     if (isShortOptVal(str)) {
       const opts = parseShortOptVal(str);
-      outObj.opts = { ...(outObj.opts as ObjType), ...opts };
+      setOptsValue(outObj.opts, opts);
       continue;
     }
 
     if (isNegationOpt(str)) {
       const opts = parseNegationOpt(str);
-      outObj.opts = { ...(outObj.opts as ObjType), ...opts };
+      setOptsValue(outObj.opts, opts);
       continue;
     }
 
     if (isLongOpt(str)) {
       const opts = parseLongOpt(str);
-      outObj.opts = { ...(outObj.opts as ObjType), ...opts };
+      setOptsValue(outObj.opts, opts);
       continue;
     }
 

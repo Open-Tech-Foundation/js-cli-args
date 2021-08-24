@@ -182,10 +182,24 @@ describe('Parser', () => {
     });
   });
 
+  test('git add --refresh --no-refresh', () => {
+    expect(parser('git add --refresh --no-refresh')).toEqual({
+      args: ['git', 'add'],
+      opts: { refresh: false },
+    });
+  });
+
   test('-x=1 -x=2', () => {
     expect(parser('-x=1 -x=2')).toEqual({
       args: [],
       opts: { x: [1, 2] },
+    });
+  });
+
+  test('-x=1 -y=2 -z=3 -y=2.5 -y=44', () => {
+    expect(parser('-x=1 -y=2 -z=3 -y=2.5 -y=44')).toEqual({
+      args: [],
+      opts: { x: 1, y: [2, 2.5, 44], z: 3 },
     });
   });
 
