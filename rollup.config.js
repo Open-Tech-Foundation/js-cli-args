@@ -8,6 +8,10 @@ export default {
       file: './lib/index.esm.js',
       format: 'esm',
     },
+    {
+      file: './lib/index.cjs',
+      format: 'cjs',
+    },
   ],
   plugins: [clean('lib/*'), typescript({ tsconfig: './tsconfig.json' })],
   external: ['@open-tech-world/es-utils'],
