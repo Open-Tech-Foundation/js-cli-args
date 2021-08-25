@@ -7,11 +7,22 @@ function getValue(str: string): unknown {
     return Number(str);
   }
 
-  if (RegExp(/^["'][^"']*["']$/).test(str)) {
+  if (new RegExp(/^["'][^"']*["']$/).test(str)) {
     const regExpRes = new RegExp(/^["']([^"']*)["']$/).exec(str);
     if (regExpRes) {
       return regExpRes[1];
     }
+  }
+
+  if (new RegExp(/^(?:.+),(?:.+)$/).test(str)) {
+    const arr = [];
+    const regExp = new RegExp(/([^,]+)/g);
+    let match;
+    while ((match = regExp.exec(str)) !== null) {
+      arr.push(getValue(match[0]));
+    }
+
+    return arr;
   }
 
   return str;
@@ -68,11 +79,11 @@ function parseNegationOpt(str: string): ObjType {
 }
 
 function isShortOpts(str: string): boolean {
-  return RegExp(/^(?:-{1})(?:[a-zA-Z]+)$/).test(str);
+  return new RegExp(/^(?:-{1})(?:[a-zA-Z]+)$/).test(str);
 }
 
 function isShortOptVal(str: string): boolean {
-  return RegExp(/^(?:-{1})(?:[a-zA-Z]+)=(?:.*)$/).test(str);
+  return new RegExp(/^(?:-{1})(?:[a-zA-Z]+)=(?:.*)$/).test(str);
 }
 
 function splitStr(args: string): string[] {
@@ -109,11 +120,11 @@ function splitStr(args: string): string[] {
 }
 
 function isLongOpt(str: string): boolean {
-  return RegExp(/^-{2}[a-zA-Z0-9-]{2,}(?:=.*)?$/).test(str);
+  return new RegExp(/^-{2}[a-zA-Z0-9-]{2,}(?:=.*)?$/).test(str);
 }
 
 function isNegationOpt(str: string): boolean {
-  return RegExp(/^-{2}no-(?:[a-zA-Z]+)$/).test(str);
+  return new RegExp(/^-{2}no-(?:[a-zA-Z]+)$/).test(str);
 }
 
 interface IOutObj {
@@ -142,6 +153,10 @@ function setOptsValue(optsObj: ObjType, newOptions: ObjType): void {
         } else {
           optsObj[key] = [optsObj[key], value];
         }
+      }
+
+      if (Array.isArray(value)) {
+        (optsObj[key] as unknown[]).push(...value);
       }
     } else {
       optsObj[key] = value;
