@@ -3,6 +3,10 @@ import { camelCase, isNumber } from '@open-tech-world/es-utils';
 type ObjType = Record<string, unknown>;
 
 function getValue(str: string): unknown {
+  if (!str) {
+    return true;
+  }
+
   if (isNumber(str)) {
     return Number(str);
   }
@@ -61,7 +65,32 @@ function parseLongOpt(str: string): ObjType {
   if (result) {
     const opt = camelCase(result[1]);
     const value = result[2];
-    obj[opt] = value ? getValue(value) : true;
+    obj[opt] = getValue(value);
+  }
+
+  return obj;
+}
+
+function parseLongObjOpt(str: string): ObjType {
+  const obj: ObjType = {};
+  const result = new RegExp(/^-{2}([a-zA-Z0-9.]{2,})(?:=(.*))?$/).exec(str);
+
+  if (result) {
+    const props = result[1].split('.');
+    const value = getValue(result[2]);
+    let tempPath: ObjType = obj;
+    props.forEach((item, index) => {
+      if (index === props.length - 1) {
+        tempPath[item] = value;
+        return;
+      }
+
+      if (!tempPath[item]) {
+        tempPath[item] = {};
+      }
+
+      tempPath = tempPath[item] as ObjType;
+    });
   }
 
   return obj;
@@ -164,6 +193,10 @@ function setOptsValue(optsObj: ObjType, newOptions: ObjType): void {
   }
 }
 
+function isLongObjOpt(str: string): boolean {
+  return new RegExp(/^-{2}[a-zA-Z0-9.]{2,}(?:=.*)?$/).test(str);
+}
+
 function parser(args: string | string[]): IOutObj {
   const curArgs = typeof args === 'string' ? splitStr(args.trim()) : args;
   const outObj: IOutObj = { args: [], opts: {} };
@@ -191,6 +224,12 @@ function parser(args: string | string[]): IOutObj {
 
     if (isLongOpt(str)) {
       const opts = parseLongOpt(str);
+      setOptsValue(outObj.opts, opts);
+      continue;
+    }
+
+    if (isLongObjOpt(str)) {
+      const opts = parseLongObjOpt(str);
       setOptsValue(outObj.opts, opts);
       continue;
     }

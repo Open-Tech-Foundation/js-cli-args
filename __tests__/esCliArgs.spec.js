@@ -154,6 +154,20 @@ describe('Parser', () => {
     });
   });
 
+  test('--user.email=user@example.com', () => {
+    expect(parser('--user.email=user@example.com')).toEqual({
+      args: [],
+      opts: { user: { email: 'user@example.com' } },
+    });
+  });
+
+  test('--user.age=25', () => {
+    expect(parser('--user.age=25')).toEqual({
+      args: [],
+      opts: { user: { age: 25 } },
+    });
+  });
+
   test('--no-g', () => {
     expect(parser('--no-g')).toEqual({
       args: [],
