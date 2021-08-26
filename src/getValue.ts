@@ -5,15 +5,16 @@ function getValue(str: string): unknown {
     return true;
   }
 
-  if (isNumber(str)) {
-    return Number(str);
-  }
-
   if (new RegExp(/^["'].*["']$/).test(str)) {
-    const regExpRes = new RegExp(/^["']([^"']*)["']$/).exec(str);
+    const regExpRes = new RegExp(/^["'](.*)["']$/).exec(str);
+
     if (regExpRes) {
       return regExpRes[1];
     }
+  }
+
+  if (isNumber(str)) {
+    return Number(str);
   }
 
   if (new RegExp(/^(?:.+),(?:.+)$/).test(str)) {
@@ -31,7 +32,7 @@ function getValue(str: string): unknown {
     const regExpRes = new RegExp(/^([a-zA-Z0-9.]+)=(.*)$/).exec(str);
 
     if (regExpRes) {
-      return setInObj({}, regExpRes[1], regExpRes[2]);
+      return setInObj({}, regExpRes[1], getValue(regExpRes[2]));
     }
   }
 

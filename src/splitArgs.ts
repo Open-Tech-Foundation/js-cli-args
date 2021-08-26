@@ -11,11 +11,8 @@ function splitArgs(args: string): string[] {
       );
 
       if (regExpResult) {
-        const matchStr = regExpResult[0];
-        str += matchStr.slice(1, -1);
-        i = i + regExpResult[0].length;
-        out.push(str);
-        str = '';
+        str += regExpResult[0];
+        i = i + regExpResult[0].length - 1;
         continue;
       }
     }
