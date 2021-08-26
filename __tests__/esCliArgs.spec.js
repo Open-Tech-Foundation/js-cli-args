@@ -51,6 +51,14 @@ describe('Parser', () => {
     expect(parser('-n=5')).toEqual({ args: [], opts: { n: 5 } });
   });
 
+  test('-n="5"', () => {
+    expect(parser('-n="5"')).toEqual({ args: [], opts: { n: '5' } });
+  });
+
+  test('[-n="5"]', () => {
+    expect(parser(['-n="5"'])).toEqual({ args: [], opts: { n: '5' } });
+  });
+
   test('-n=23.09', () => {
     expect(parser('-n=23.09')).toEqual({ args: [], opts: { n: 23.09 } });
   });
@@ -196,6 +204,13 @@ describe('Parser', () => {
     });
   });
 
+  test('--no-long-opt', () => {
+    expect(parser('--no-long-opt')).toEqual({
+      args: [],
+      opts: { longOpt: false },
+    });
+  });
+
   test('git --no-pager', () => {
     expect(parser('git --no-pager')).toEqual({
       args: ['git'],
@@ -245,6 +260,20 @@ describe('Parser', () => {
     });
   });
 
+  test(`--numbers=1,"Two",3,'Four'`, () => {
+    expect(parser(`--numbers=1,"Two",3,'Four'`)).toEqual({
+      args: [],
+      opts: { numbers: [1, 'Two', 3, 'Four'] },
+    });
+  });
+
+  test(`[--numbers=1,"Two",3,'Four']`, () => {
+    expect(parser([`--numbers=1,"Two",3,'Four'`])).toEqual({
+      args: [],
+      opts: { numbers: [1, 'Two', 3, 'Four'] },
+    });
+  });
+
   test('ssh 192.168.56.101', () => {
     expect(parser('ssh 192.168.56.101')).toEqual({
       args: ['ssh', '192.168.56.101'],
@@ -287,10 +316,10 @@ describe('Parser', () => {
     });
   });
 
-  test('git config --system user.name="Thanga Ganapathy" user.email=user@example.com', () => {
+  test(`git config --system user.name="Thanga Ganapathy" user.email='user@example.com'`, () => {
     expect(
       parser(
-        'git config --system user.name="Thanga Ganapathy" user.email=user@example.com'
+        `git config --system user.name="Thanga Ganapathy" user.email='user@example.com'`
       )
     ).toEqual({
       args: [
@@ -325,6 +354,36 @@ describe('Parser', () => {
     ).toEqual({
       args: [],
       opts: { stage: { file: ['a.txt', 'b.txt'], exclude: 'c.txt' } },
+    });
+  });
+
+  test(`cmd arg1 2 3.7 -a -bc -d=msg -g="Double quote" -h='single' -i=1,2,3 --no-f --long --long-num=1234567890 --long-msg="msg" --long-single='single' --long-arr=10,23,45 --obj.name --obj.prop='msg' --no-false-long pos-arg1 obj.a="apple"`, () => {
+    expect(
+      parser(
+        `cmd arg1 2 3.7 -a -bc -d=msg -g="Double quote" -h='single' -i=1,2,3 --no-f --long --long-num=1234567890 --long-msg="msg" --long-single='single' --long-arr=10,23,45 --obj.name --obj.prop='msg' --no-false-long pos-arg1 obj.a="apple"`
+      )
+    ).toEqual({
+      args: ['cmd', 'arg1', 2, 3.7, 'pos-arg1', { obj: { a: 'apple' } }],
+      opts: {
+        a: true,
+        b: true,
+        c: true,
+        d: 'msg',
+        f: false,
+        g: 'Double quote',
+        h: 'single',
+        i: [1, 2, 3],
+        long: true,
+        longNum: 1234567890,
+        longMsg: 'msg',
+        longSingle: 'single',
+        longArr: [10, 23, 45],
+        obj: {
+          name: true,
+          prop: 'msg',
+        },
+        falseLong: false,
+      },
     });
   });
 });

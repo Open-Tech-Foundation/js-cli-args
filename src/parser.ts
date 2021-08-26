@@ -26,7 +26,7 @@ function isLongOpt(str: string): boolean {
 }
 
 function isNegationOpt(str: string): boolean {
-  return new RegExp(/^-{2}no-(?:[a-zA-Z]+)$/).test(str);
+  return new RegExp(/^-{2}no-(?:[a-zA-Z-]+)$/).test(str);
 }
 
 function isLongObjOpt(str: string): boolean {
