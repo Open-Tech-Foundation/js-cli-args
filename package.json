@@ -2,7 +2,13 @@
   "name": "@open-tech-world/es-cli-args",
   "version": "0.1.0",
   "description": "A strict CLI arguments parser.",
-  "keywords": ["cli", "args", "argv", "arguments", "parser"],
+  "keywords": [
+    "cli",
+    "args",
+    "argv",
+    "arguments",
+    "parser"
+  ],
   "author": {
     "name": "Thanga Ganapathy",
     "email": "ganapathy888@gmail.com",
@@ -49,6 +55,6 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
-    "@open-tech-world/es-utils": "^0.11.0"
+    "@open-tech-world/es-utils": "^0.12.0"
   }
 }

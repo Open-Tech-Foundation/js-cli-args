@@ -6,13 +6,16 @@ function splitArgs(args: string): string[] {
     const char = args[i];
 
     if (char === '"' || char === "'") {
-      const regExpResult = new RegExp(/["']([^"']*)["']/).exec(
+      const regExpResult = new RegExp(/("[^"]*")|('[^']*')/).exec(
         args.substring(i)
       );
 
       if (regExpResult) {
-        str += regExpResult[0];
+        const matchStr = regExpResult[0];
+        str += matchStr.slice(1, -1);
         i = i + regExpResult[0].length;
+        out.push(str);
+        str = '';
         continue;
       }
     }
@@ -26,7 +29,9 @@ function splitArgs(args: string): string[] {
     str += char;
   }
 
-  out.push(str);
+  if (str) {
+    out.push(str);
+  }
 
   return out;
 }

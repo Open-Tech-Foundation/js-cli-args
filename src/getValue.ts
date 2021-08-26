@@ -1,4 +1,4 @@
-import { isNumber } from '@open-tech-world/es-utils';
+import { isNumber, setInObj } from '@open-tech-world/es-utils';
 
 function getValue(str: string): unknown {
   if (!str) {
@@ -9,7 +9,7 @@ function getValue(str: string): unknown {
     return Number(str);
   }
 
-  if (new RegExp(/^["'][^"']*["']$/).test(str)) {
+  if (new RegExp(/^["'].*["']$/).test(str)) {
     const regExpRes = new RegExp(/^["']([^"']*)["']$/).exec(str);
     if (regExpRes) {
       return regExpRes[1];
@@ -25,6 +25,14 @@ function getValue(str: string): unknown {
     }
 
     return arr;
+  }
+
+  if (new RegExp(/^(?:[a-zA-Z0-9.]+)=(?:.*)$/).test(str)) {
+    const regExpRes = new RegExp(/^([a-zA-Z0-9.]+)=(.*)$/).exec(str);
+
+    if (regExpRes) {
+      return setInObj({}, regExpRes[1], regExpRes[2]);
+    }
   }
 
   return str;

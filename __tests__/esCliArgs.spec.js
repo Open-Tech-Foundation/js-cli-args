@@ -84,6 +84,13 @@ describe('Parser', () => {
     });
   });
 
+  test(`-a=a,b,c`, () => {
+    expect(parser(`-a=a,b,c`)).toEqual({
+      args: [],
+      opts: { a: ['a', 'b', 'c'] },
+    });
+  });
+
   test('--verbose', () => {
     expect(parser('--verbose')).toEqual({
       args: [],
@@ -168,6 +175,13 @@ describe('Parser', () => {
     });
   });
 
+  test('--core.editor="atom --wait"', () => {
+    expect(parser('--core.editor="atom --wait"')).toEqual({
+      args: [],
+      opts: { core: { editor: 'atom --wait' } },
+    });
+  });
+
   test('--no-g', () => {
     expect(parser('--no-g')).toEqual({
       args: [],
@@ -249,6 +263,68 @@ describe('Parser', () => {
     expect(parser('vim /etc/ssh/sshd_config')).toEqual({
       args: ['vim', '/etc/ssh/sshd_config'],
       opts: {},
+    });
+  });
+
+  test('git config --global --alias.ci=commit', () => {
+    expect(parser('git config --global --alias.ci=commit')).toEqual({
+      args: ['git', 'config'],
+      opts: { global: true, alias: { ci: 'commit' } },
+    });
+  });
+
+  test('--user.name=user1 --user.email=user@example.com', () => {
+    expect(parser('--user.name=user1 --user.email=user@example.com')).toEqual({
+      args: [],
+      opts: { user: { name: 'user1', email: 'user@example.com' } },
+    });
+  });
+
+  test('git config --system user.email=user@example.com', () => {
+    expect(parser('git config --system user.email=user@example.com')).toEqual({
+      args: ['git', 'config', { user: { email: 'user@example.com' } }],
+      opts: { system: true },
+    });
+  });
+
+  test('git config --system user.name="Thanga Ganapathy" user.email=user@example.com', () => {
+    expect(
+      parser(
+        'git config --system user.name="Thanga Ganapathy" user.email=user@example.com'
+      )
+    ).toEqual({
+      args: [
+        'git',
+        'config',
+        { user: { name: 'Thanga Ganapathy' } },
+        { user: { email: 'user@example.com' } },
+      ],
+      opts: { system: true },
+    });
+  });
+
+  test(`--action-msg="let's do it!"`, () => {
+    expect(parser(`--action-msg="let's do it!"`)).toEqual({
+      args: [],
+      opts: { actionMsg: "let's do it!" },
+    });
+  });
+
+  test(`--stage.file=a.txt --stage.file=b.txt --stage.file=c.txt`, () => {
+    expect(
+      parser('--stage.file=a.txt --stage.file=b.txt --stage.file=c.txt')
+    ).toEqual({
+      args: [],
+      opts: { stage: { file: ['a.txt', 'b.txt', 'c.txt'] } },
+    });
+  });
+
+  test(`--stage.file=a.txt --stage.file=b.txt --stage.exclude='c.txt'`, () => {
+    expect(
+      parser(`--stage.file=a.txt --stage.file=b.txt --stage.exclude='c.txt'`)
+    ).toEqual({
+      args: [],
+      opts: { stage: { file: ['a.txt', 'b.txt'], exclude: 'c.txt' } },
     });
   });
 });

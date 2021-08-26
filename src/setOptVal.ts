@@ -25,6 +25,12 @@ function setOptsVal(optsObj: ObjType, newOptions: ObjType): void {
 
       if (Array.isArray(value)) {
         (optsObj[key] as unknown[]).push(...value);
+
+        continue;
+      }
+
+      if (typeof value === 'object') {
+        setOptsVal(optsObj[key] as ObjType, value as ObjType);
       }
     } else {
       optsObj[key] = value;

@@ -717,7 +717,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@open-tech-world/es-cli-args@workspace:."
   dependencies:
-    "@open-tech-world/es-utils": ^0.11.0
+    "@open-tech-world/es-utils": ^0.12.0
     "@open-tech-world/rollup-plugin-clean": ^0.13.0
     "@rollup/plugin-typescript": ^8.2.5
     "@types/jest": ^27.0.1
@@ -749,10 +749,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@open-tech-world/es-utils@npm:^0.11.0":
-  version: 0.11.0
-  resolution: "@open-tech-world/es-utils@npm:0.11.0"
-  checksum: 26de57e9be8b4171cd1d66fc3d5fd342f57e3db079fab444bca23ea3a376a5478568443448a2518667801e320eea573da4b2beaaaea0eede731621d5fa860742
+"@open-tech-world/es-utils@npm:^0.12.0":
+  version: 0.12.0
+  resolution: "@open-tech-world/es-utils@npm:0.12.0"
+  checksum: 3594f76e3d73b274c324b9c825c8fd1c7200a6b653dcf7f95fa1cdb82847e7b438777dc6c608279a43c97b9df77a65643e3033760ad3e5c2f7057a5711ddcd9a
   languageName: node
   linkType: hard
 
