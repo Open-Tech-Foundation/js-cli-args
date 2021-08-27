@@ -1,4 +1,10 @@
+<div align="center">
+
 # @open-tech-world/es-cli-args
+
+[![Build](https://github.com/open-tech-world/es-cli-args/actions/workflows/build.yml/badge.svg)](https://github.com/open-tech-world/es-cli-args/actions/workflows/build.yml) [![CodeFactor](https://www.codefactor.io/repository/github/open-tech-world/es-cli-args/badge)](https://www.codefactor.io/repository/github/open-tech-world/es-cli-args)
+
+</div>
 
 > A strict CLI arguments parser.
 
@@ -108,8 +114,8 @@ Output:
 
 Input:
 
-```ts
-parser('-x=1 -x=2'));
+```shell
+$ node example.js -x=1 -x=2
 ```
 
 Output:
@@ -123,8 +129,8 @@ Output:
 
 Input:
 
-```ts
-parser('-y=1,2');
+```shell
+$ node example.js -y=1,2
 ```
 
 Output:
@@ -251,7 +257,27 @@ Or probably from `process.argv.slice(2)`.
   }
   ```
 
-  Number value: `ssh test.server.com -p=3322`, `tar --level=5`
+  ```shell
+  $ ssh example.com -p=3322
+  ```
+
+  ```json
+  {
+    "args": ["ssh", "example.com"],
+    "opts": { "p": 3322 }
+  }
+  ```
+
+  ```shell
+  $ tar -cf archive.tar foo bar --level=5
+  ```
+
+  ```json
+  {
+    "args": ["tar", "archive.tar", "foo", "bar"],
+    "opts": { "c": true, "f": true, "level": 5 }
+  }
+  ```
 
 - The Options can contain `Array` values, use the `,`(comma) character without space to create an array of values.
 
@@ -310,8 +336,8 @@ Or probably from `process.argv.slice(2)`.
 
   ```json
   {
-    "args": [],
-    "opts": {}
+    "args": [...],
+    "opts": {...}
   }
   ```
 
@@ -319,9 +345,20 @@ Or probably from `process.argv.slice(2)`.
 
 - There is no distinction while parsing `sub-commands`, all `commands` & `sub-commands` are included in the `args` prop of output object in the given order.
 
+  ```ts
+  parser('docker container create --name=ubuntu01 ubuntu');
+  ```
+
+  ```json
+  {
+    "args": ["docker", "container", "create", "ubuntu"],
+    "opts": { "name": "ubuntu01" }
+  }
+  ```
+
 - Due to auto-inference of types, the values might be mismatched.
 
-  The following example show the color values returning as type `number` converted from hex value.
+  The following example shows the color value returning as type `number` converted from hex value.
 
   ```shell
   $ node example.js --color=0xFFFF
@@ -334,7 +371,7 @@ Or probably from `process.argv.slice(2)`.
   }
   ```
 
-  If you need the value as string, you can sorround it with single or double quotes accordingly.
+  If you need the value as string, you can surround it with single or double quotes accordingly.
 
   ```shell
   $ node example.js --color='0xFFFF'
@@ -346,6 +383,10 @@ Or probably from `process.argv.slice(2)`.
     "opts": { "color": "0xFFFF" }
   }
   ```
+
+- Currently `true` or `false` in the arguments will be parsed as string, Eg: `--foo=false` => `{ foo: 'false' }`
+
+  `The auto-infer boolean types feature can be implemented later based user requests.`
 
 ## References
 

@@ -396,3 +396,10 @@ describe('Parser', () => {
     expect(parser('--color="0xFFFF"').opts.color).toBe('0xFFFF');
   });
 });
+
+test('docker container create --name ubuntu01 ubuntu', () => {
+  expect(parser('docker container create --name=ubuntu01 ubuntu')).toEqual({
+    args: ['docker', 'container', 'create', 'ubuntu'],
+    opts: { name: 'ubuntu01' },
+  });
+});
