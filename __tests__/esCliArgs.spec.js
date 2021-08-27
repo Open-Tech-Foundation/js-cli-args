@@ -386,4 +386,13 @@ describe('Parser', () => {
       },
     });
   });
+
+  test('--color=0xFFFF', () => {
+    expect(typeof parser('--color=0xFFFF').opts.color).toBe('number');
+  });
+
+  test('--color="0xFFFF"', () => {
+    expect(typeof parser('--color="0xFFFF"').opts.color).toBe('string');
+    expect(parser('--color="0xFFFF"').opts.color).toBe('0xFFFF');
+  });
 });

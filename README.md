@@ -188,11 +188,13 @@ The positional arguments are parameters to a command. The order is often importa
 
 Eg: `cp SOURCE DEST`
 
+In the above example, the `SOURCE` & `DEST` are positional arguments for `cp`
+
 **Options:**
 
 The Options or Flags are named parameters.
 
-Denoted with either a hyphen and a single-letter name or a double hyphen and a multiple-letter name.
+Denoted with either a hyphen `-` and a single-letter name or a double hyphen `--` and a multiple-letter name.
 
 Eg:
 
@@ -224,27 +226,126 @@ Or probably from `process.argv.slice(2)`.
 
 - The positional arguments are also included in the `args` array property of the `output object`.
 
-- The options are converted into [camelCased](https://es-utils.netlify.app/docs/String/camelCase)
+- The options are default converted into [camelCase](https://es-utils.netlify.app/docs/String/camelCase) and included in the `opts` object of `output object`.
 
-  Eg: `parser(--dry-run)` => `{ args: [], opts: { dryRun: true } }`
+  ```shell
+  $ npm publish --dry-run
+  ```
 
-- The default value for a option is boolean `true`.
+  ```json
+  { "args": ["npm", "publish"], "opts": { "dryRun": true } }
+  ```
 
-- A different value can be set for options using `=` character.
+- The default value for an option is boolean `true`.
 
-  Eg:
-  
-  String value: `git commit -m="New commit msg"`
+- A value can be set for options using `=` character.
+
+  ```shell
+  $ git commit -a -m='New commit msg'
+  ```
+
+  ```json
+  {
+    "args": ["git", "commit"],
+    "opts": { "a": true, "m": "New commit msg" }
+  }
+  ```
 
   Number value: `ssh test.server.com -p=3322`, `tar --level=5`
 
-- The Options can contain array values, use `,`(comma) character without space.
+- The Options can contain `Array` values, use the `,`(comma) character without space to create an array of values.
 
-  Eg: `-x=1,2` => `{ args: [], opts: { x: [1, 2] } }`
+  ```shell
+  $ node example.js -x=1,2
+  ```
+
+  ```json
+  { "args": [], "opts": { "x": [1, 2] } }
+  ```
 
 - The short options can grouped.
-  
-  Eg: `tar -tvf archive.tar`
+
+  ```shell
+  $ tar -tvf archive.tar
+  ```
+
+  ```json
+  {
+    "args": ["tar", "archive.tar"],
+    "opts": { "t": true, "v": true, "f": true }
+  }
+  ```
+
+- The grouped short options cannot be assigned a value.
+
+  The following does not work
+
+  ```shell
+  $ git commit -am="Commit msg"
+  ```
+
+- `Boolean Negation`: The options can be boolean negated using `--no-` prefix.
+
+  ```shell
+  $ git commit --no-verify
+  ```
+
+  ```json
+  { "args": ["git", "commit"], "opts": { "verify": false } }
+  ```
+
+- `Dot-Notation`: The value of long options that contain `.`(Dot) character are converted into object.
+
+  ```shell
+  $ node example.js --user.email=user@example.com
+  ```
+
+  ```json
+  { "args": [], "opts": { "user": { "email": "user@example.com" } } }
+  ```
+
+- **Output**
+
+  The parser returns an object containing all `Commands` & `Positional arguments` in an `args` array prop and all `short` & `long` options set in an object `opts` prop.
+
+  ```json
+  {
+    "args": [],
+    "opts": {}
+  }
+  ```
+
+## Notes:
+
+- There is no distinction while parsing `sub-commands`, all `commands` & `sub-commands` are included in the `args` prop of output object in the given order.
+
+- Due to auto-inference of types, the values might be mismatched.
+
+  The following example show the color values returning as type `number` converted from hex value.
+
+  ```shell
+  $ node example.js --color=0xFFFF
+  ```
+
+  ```json
+  {
+    "args": [],
+    "opts": { "color": 65535 }
+  }
+  ```
+
+  If you need the value as string, you can sorround it with single or double quotes accordingly.
+
+  ```shell
+  $ node example.js --color='0xFFFF'
+  ```
+
+  ```json
+  {
+    "args": [],
+    "opts": { "color": "0xFFFF" }
+  }
+  ```
 
 ## References
 
