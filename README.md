@@ -226,7 +226,7 @@ Or probably from `process.argv.slice(2)`.
 
 - There is no additional configuration to specify arguments type.
 
-- The arguments types are auto infered.
+- The arguments types are auto inferred.
 
 - The commands & sub-commands are included in the `args` array property of the `output object`.
 
@@ -386,7 +386,7 @@ Or probably from `process.argv.slice(2)`.
 
 - Currently `true` or `false` in the arguments will be parsed as string, Eg: `--foo=false` => `{ foo: 'false' }`
 
-  `The auto-infer boolean types feature can be implemented later based user requests.`
+  The `auto-infer` boolean types feature can be implemented later based on the user requests.
 
 ## References
 
