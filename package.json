@@ -1,6 +1,6 @@
 {
   "name": "@open-tech-world/es-cli-args",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A strict CLI arguments parser.",
   "keywords": [
     "cli",
